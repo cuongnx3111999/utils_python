@@ -87,7 +87,7 @@ class File_Interact():
         f.close()
 
     def write_file_from_list(self, list_lines):
-        f = io.open(self.file_name, 'w', encoding='utf-8')
+        f = io.open(self.file_name, 'a', encoding='utf-8')
         f.write('\n'.join(list_lines))
         f.close()
 
