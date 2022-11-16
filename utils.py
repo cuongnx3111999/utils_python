@@ -1,6 +1,5 @@
 from utils_selenium import *
 from utils_class import *
-
 def create_driver():
     driver = init_driver()
     return driver
@@ -26,17 +25,15 @@ def get_links(driver):
     file = File_Interact('links.txt')
     file.write_file_from_list(links)
 
-def save_rating(driver):
+def save_rating(driver,index_link,link,star_rating):
     rating_elems = driver.find_elements(By.CSS_SELECTOR, "._280jKz")
-    L_rating = [rating.text for rating in rating_elems]
+    L_rating = [f"{index_link},{link},{star_rating},{rating.text}" for rating in rating_elems]
     if L_rating:
-        print(L_rating)
         file = File_Interact('rating.txt')
         file.write_file_from_list(L_rating)
-        print(1)
         return 1
     else:
-        print(0)
+        print("break")
         print(L_rating)
         return 0
 
@@ -44,38 +41,29 @@ def get_rating(driver):
     # lay link
     file = File_Interact('links.txt')
     links=file.read_file_list()
-    index_link=0
-    link=links[index_link]
-    print(index_link)
-    print(link)
-    file = File_Interact('rating.txt')
-    driver.get(link)
+    for i in range(10,10):
+        index_link=i
+        link=links[index_link]
+        print(index_link)
+        print(link)
+        driver.get(link)
 
-    # Chon tu 1 sao den 5 sao
-    start_click=driver.find_elements(By.CSS_SELECTOR,".product-rating-overview__filter")
-    # lay rating
-    while (True):
-        if(save_rating()==0):
-            break
-        print("ok")
-        time.sleep(2)
-        click_button_next = driver.find_element(By.CSS_SELECTOR, ".shopee-icon-button.shopee-icon-button--right ").click()
-        time.sleep(2)
-    print("Break")
+        # Chon tu 1 sao den 5 sao
+        wait_element_can_click(driver,".product-rating-overview__filter")
+        start_click=driver.find_elements(By.CSS_SELECTOR,".product-rating-overview__filter")
+        for i in range(1,6):
+            start_click[i].click()
+            time.sleep(2)
+            print(f"star {6-i}")
+        # lay rating
+            while (True):
+                if(save_rating(driver,index_link=index_link,link=link,star_rating=i)==0):
+                    break
+                time.sleep(2)
+                click_button_next = driver.find_element(By.CSS_SELECTOR, ".shopee-icon-button.shopee-icon-button--right ").click()
+                time.sleep(2)
+            print("Break")
 
-    # for i in range(10):
-    #     file = File_Interact('rating.txt')
-    #     file.write_file_from_list(["1"])
-    #     file.write_file_from_list(links[index_link])
-    #     driver.get(links[i])
-    #     # lay rating
-    #     while(True):
-    #         if save_rating():
-    #             time.sleep(2)
-    #             click_button_next = driver.find_element(By.CSS_SELECTOR, ".shopee-icon-button.shopee-icon-button--right ")
-    #             click_button_next.click()
-    #         else:
-    #             break
 if __name__=="__main__":
     driver=create_driver()
     get_links(driver)
