@@ -88,4 +88,8 @@ from utils import *
 
 if __name__=="__main__":
     driver = create_driver()
-    get_rating(driver)
+    try:
+        get_rating(driver)
+    except:
+        driver.close()
+    driver.close()

@@ -27,9 +27,13 @@ def get_links(driver):
 
 def save_rating(driver,index_link,link,star_rating):
     rating_elems = driver.find_elements(By.CSS_SELECTOR, "._280jKz")
-    L_rating = [f"{index_link},{link},{star_rating},{rating.text}" for rating in rating_elems]
+    L_rating=[]
+    # L_rating = [f"{index_link},{link},{star_rating},{rating.text}" for rating in rating_elems]
+    for rating in rating_elems:
+        text=rating.text.replace("\n","  ")
+        L_rating.append(f"{index_link},{link},{star_rating},{text}")
     if L_rating:
-        file = File_Interact('rating.txt')
+        file = File_Interact('rating1.csv')
         file.write_file_from_list(L_rating)
         return 1
     else:
@@ -41,7 +45,7 @@ def get_rating(driver):
     # lay link
     file = File_Interact('links.txt')
     links=file.read_file_list()
-    for i in range(10,10):
+    for i in range(9,11):
         index_link=i
         link=links[index_link]
         print(index_link)
